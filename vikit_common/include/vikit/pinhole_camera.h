@@ -25,6 +25,7 @@ private:
   const double fx_, fy_;
   const double cx_, cy_;
   bool distortion_;             //!< is it pure pinhole model or has it radial distortion?
+  // d_[5]依次是k1,k2,p1,p2,k3.k表示径向失真,p表示角向失真
   double d_[5];                 //!< distortion parameters, see http://docs.opencv.org/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
   cv::Mat cvK_, cvD_;
   cv::Mat undist_map1_, undist_map2_;

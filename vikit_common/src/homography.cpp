@@ -34,6 +34,7 @@ calcFromPlaneParams(const Vector3d& n_c1, const Vector3d& xyz_c1)
   H_c2_from_c1 = T_c2_from_c1.rotation_matrix() + (T_c2_from_c1.translation()*n_c1.transpose())/d;
 }
 
+// 从两组对应点计算单应矩阵
 void Homography::
 calcFromMatches()
 {
@@ -57,6 +58,7 @@ calcFromMatches()
   H_c2_from_c1(2,2) = cvH.at<double>(2,2);
 }
 
+// 计算在当前单应矩阵下,两组点中满足对应关系的点对个数,和究竟哪些点对满足关系
 size_t Homography::
 computeMatchesInliers()
 {

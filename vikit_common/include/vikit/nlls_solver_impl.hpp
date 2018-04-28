@@ -11,6 +11,8 @@
 #define LM_SOLVER_IMPL_HPP_
 
 #include <stdexcept>
+// 自己新加的
+#include <vikit/nlls_solver.h>
 
 template <int D, typename T>
 void vk::NLLSSolver<D, T>::optimize(ModelType& model)

@@ -31,6 +31,7 @@ public:
   virtual ~AbstractCamera() {};
 
   /// Project from pixels to world coordiantes. Returns a bearing vector of unit length.
+  //// 纯虚函数
   virtual Vector3d
   cam2world(const double& x, const double& y) const = 0;
 
@@ -55,6 +56,7 @@ public:
 
   inline int height() const { return height_; }
 
+  // 检查一个图像点是否在图像内部
   inline bool isInFrame(const Vector2i & obs, int boundary=0) const
   {
     if(obs[0]>=boundary && obs[0]<width()-boundary
@@ -62,7 +64,7 @@ public:
       return true;
     return false;
   }
-
+  // 检查一个图像点是否在某一层金字塔图像的内部
   inline bool isInFrame(const Vector2i &obs, int boundary, int level) const
   {
     if(obs[0] >= boundary && obs[0] < width()/(1<<level)-boundary

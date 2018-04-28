@@ -76,6 +76,7 @@ world2cam(const Vector3d& xyz) const
   return world2cam(project2d(xyz));
 }
 
+// uv是归一化平面上的点
 Vector2d PinholeCamera::
 world2cam(const Vector2d& uv) const
 {
@@ -96,7 +97,7 @@ world2cam(const Vector2d& uv) const
     a1 = 2*x*y;
     a2 = r2 + 2*x*x;
     a3 = r2 + 2*y*y;
-    cdist = 1 + d_[0]*r2 + d_[1]*r4 + d_[4]*r6;
+    cdist = 1 + d_[0]*r2 + d_[1]*r4 + d_[4]*r6;	// 失真矫正公式
     xd = x*cdist + d_[2]*a1 + d_[3]*a2;
     yd = y*cdist + d_[2]*a3 + d_[3]*a1;
     px[0] = xd*fx_ + cx_;

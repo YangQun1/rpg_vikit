@@ -11,23 +11,33 @@ namespace vk {
 
 using namespace Eigen;
 
+// 使用中点法计算点的深度
+// 因为噪声等因素影响,两帧图像中的对应特征点从光心引出的射线可能不正好相交于一点,
+// 此时,我们需要做一条于两射线都相交的公垂线,垂线与两射线的交点构成的线段的中点即为空间点,
+// 这种方法避免了复杂的优化过程,或者求解最小二乘法的求解.
 Vector3d
 triangulateFeatureNonLin(const Matrix3d& R,  const Vector3d& t,
                          const Vector3d& feature1, const Vector3d& feature2 )
 {
-  Vector3d f2 = R * feature2;
-  Vector2d b;
-  b[0] = t.dot(feature1);
-  b[1] = t.dot(f2);
-  Matrix2d A;
-  A(0,0) = feature1.dot(feature1);
-  A(1,0) = feature1.dot(f2);
-  A(0,1) = -A(1,0);
-  A(1,1) = -f2.dot(f2);
-  Vector2d lambda = A.inverse() * b;
-  Vector3d xm = lambda[0] * feature1;
-  Vector3d xn = t + lambda[1] * f2;
-  return ( xm + xn )/2;
+	// 变量含义:
+	// lambda: 公垂线与两射线交点的深度与单位深度的比值.
+	// xm: 交点1的3D坐标;xn交点2的3D坐标
+	// xn是通过将归一化平面上的点feature2先缩放到实际深度,然后使用旋转矩阵和平移向量
+	// 变换到第一帧的坐标系下,求得的,也就是xn=R*lambda[1]feature2 + t
+	// 然后利用垂线与两射线的垂直关系,求解出缩放银子lambda
+	Vector3d f2 = R * feature2;
+	Vector2d b;
+	b[0] = t.dot(feature1);
+	b[1] = t.dot(f2);
+	Matrix2d A;
+	A(0,0) = feature1.dot(feature1);
+	A(1,0) = feature1.dot(f2);
+	A(0,1) = -A(1,0);
+	A(1,1) = -f2.dot(f2);
+	Vector2d lambda = A.inverse() * b;
+	Vector3d xm = lambda[0] * feature1;
+	Vector3d xn = t + lambda[1] * f2;
+	return ( xm + xn )/2;
 }
 
 bool

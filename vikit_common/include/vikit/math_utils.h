@@ -79,6 +79,7 @@ double sampsonusError(
     const Matrix3d& m3Essential,
     const Vector2d& v2);
 
+// 将一个三维向量转换成与之对应的反对称矩阵
 inline Matrix3d sqew(const Vector3d& v)
 {
   Matrix3d v_sqew;
@@ -88,6 +89,7 @@ inline Matrix3d sqew(const Vector3d& v)
   return v_sqew;
 }
 
+// ||x|| = max|xi| ,即求向量的无穷范数
 inline double norm_max(const Eigen::VectorXd & v)
 {
   double max = -1;
@@ -101,6 +103,7 @@ inline double norm_max(const Eigen::VectorXd & v)
   return max;
 }
 
+// 将三维向量齐次化,然后取前两维
 inline Vector2d project2d(const Vector3d& v)
 {
   return v.head<2>()/v[2];
@@ -121,11 +124,12 @@ inline Vector4d unproject3d(const Vector3d& v)
   return Vector4d(v[0], v[1], v[2], 1.0);
 }
 
+// 返回一个序列的中值
 template<class T>
 T getMedian(vector<T>& data_vec)
 {
   assert(!data_vec.empty());
-  typename vector<T>::iterator it = data_vec.begin()+floor(data_vec.size()/2);
+  typename vector<T>::iterator it = data_vec.begin()+floor(data_vec.size()/2);	// floor函数:向下取整
   nth_element(data_vec.begin(), it, data_vec.end());
   return *it;
 }
@@ -141,6 +145,7 @@ inline Vector2d pyrFromZero_2d(const Vector2d& uv_0, int level)
                   pyrFromZero_d(uv_0[1], level));
 }
 
+// 像素坐标上的重投影误差相对于相机位姿扰动量的导数
 inline void
 frameJac_xyz2uv(const Vector3d & xyz,
                  const double & focal_length,
